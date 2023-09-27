@@ -33,7 +33,7 @@ const SLM = StatsLearnModels
     @test accuracy > 0.9
 
     # throws
-    # test data is not a table
+    # training data is not a table
     @test_throws ArgumentError Learn(Tree(), nothing, incols, outcols)
   end
 end
