@@ -10,20 +10,23 @@ isprobabilistic(model::MI.Probabilistic) = true
 function SLM.fit(model::MI.Model, input, output)
   cols = Tables.columns(output)
   names = Tables.columnnames(cols)
-  y = Tables.getcolumn(cols, first(names))
+  target = first(names)
+  y = Tables.getcolumn(cols, target)
   data = MI.reformat(model, input, y)
   fitresult, _... = MI.fit(model, 0, data...)
-  SLM.FittedModel(model, fitresult)
+  SLM.FittedModel(model, (fitresult, target))
 end
 
 function SLM.predict(fmodel::SLM.FittedModel{<:MI.Model}, table)
-  (; model, fitresult) = fmodel
+  (; model, cache) = fmodel
+  fitresult, target = cache
   data = MI.reformat(model, table)
-  if isprobabilistic(model)
+  ŷ = if isprobabilistic(model)
     MI.predict_mode(model, fitresult, data...)
   else
     MI.predict(model, fitresult, data...)
   end
+  (; target => ŷ)
 end
 
 end
