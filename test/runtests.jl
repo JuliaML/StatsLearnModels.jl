@@ -1,9 +1,11 @@
 import StatsLearnModels as SLM
 using MLJ, MLJDecisionTreeInterface
 using DataFrames
+using Random
 using Test
 
 @testset "StatsLearnModels.jl" begin
+  Random.seed!(123)
   iris = DataFrame(load_iris())
   input = iris[:, Not(:target)]
   output = iris[:, [:target]]

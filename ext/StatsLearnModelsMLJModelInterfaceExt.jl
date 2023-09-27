@@ -26,7 +26,7 @@ function SLM.predict(fmodel::SLM.FittedModel{<:MI.Model}, table)
   else
     MI.predict(model, fitresult, data...)
   end
-  (; target => ŷ)
+  (; target => ŷ) |> Tables.materializer(table)
 end
 
 end
