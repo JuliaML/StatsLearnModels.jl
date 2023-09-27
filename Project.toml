@@ -1,0 +1,7 @@
+name = "StatsLearnModels"
+uuid = "c146b59d-1589-421c-8e09-a22e554fd05c"
+authors = ["Elias Carvalho <eliascarvdev@gmail.com> and contributors"]
+version = "1.0.0-DEV"
+
+[compat]
+julia = "1.9"
