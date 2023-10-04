@@ -13,8 +13,8 @@ const SLM = StatsLearnModels
     iris = DataFrame(load_iris())
     input = iris[:, Not(:target)]
     output = iris[:, [:target]]
-    Tree = @load(DecisionTreeClassifier, pkg=DecisionTree, verbosity=0)
     train, test = partition(1:nrow(input), 0.7, rng=123)
+    Tree = @load(DecisionTreeClassifier, pkg=DecisionTree, verbosity=0)
     fmodel = SLM.fit(Tree(), input[train, :], output[train, :])
     pred = SLM.predict(fmodel, input[test, :])
     accuracy = count(pred.target .== output.target[test]) / length(test)
@@ -26,9 +26,9 @@ const SLM = StatsLearnModels
     iris = DataFrame(load_iris())
     outcol = :target
     incols = setdiff(propertynames(iris), [outcol])
-    Tree = @load(DecisionTreeClassifier, pkg=DecisionTree, verbosity=0)
     train, test = partition(1:nrow(iris), 0.7, rng=123)
-    transform = Learn(Tree(), iris[train, :], incols, outcol)
+    Tree = @load(DecisionTreeClassifier, pkg=DecisionTree, verbosity=0)
+    transform = Learn(iris[train, :], Tree(), incols => outcol)
     @test !isrevertible(transform)
     pred = transform(iris[test, :])
     accuracy = count(pred.target .== iris.target[test]) / length(test)
@@ -36,6 +36,6 @@ const SLM = StatsLearnModels
 
     # throws
     # training data is not a table
-    @test_throws ArgumentError Learn(Tree(), nothing, incols, outcol)
+    @test_throws ArgumentError Learn(nothing, Tree(), incols => outcol)
   end
 end

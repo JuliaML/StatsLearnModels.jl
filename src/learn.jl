@@ -3,7 +3,7 @@
 # ------------------------------------------------------------------
 
 """
-    Learn(model, train, incols, outcols)
+    Learn(train, model, incols => outcols)
 
 Fits the statistical learning `model` using the input columns, selected by `incols`,
 and the output columns, selected by `outcols`, from the `train` table.
@@ -14,11 +14,11 @@ a collection of identifiers or a regular expression (regex).
 # Examples
 
 ```julia
-Learn(model, train, [1, 2, 3], "d")
-Learn(model, train, [:a, :b, :c], :d)
-Learn(model, train, ["a", "b", "c"], 4)
-Learn(model, train, [1, 2, 3], [:d, :e])
-Learn(model, train, r"[abc]", ["d", "e"])
+Learn(train, model, [1, 2, 3] => "d")
+Learn(train, model, [:a, :b, :c] => :d)
+Learn(train, model, ["a", "b", "c"] => 4)
+Learn(train, model, [1, 2, 3] => [:d, :e])
+Learn(train, model, r"[abc]" => ["d", "e"])
 ```
 """
 struct Learn{M<:FittedModel} <: StatelessFeatureTransform
@@ -26,7 +26,7 @@ struct Learn{M<:FittedModel} <: StatelessFeatureTransform
   input::Vector{Symbol}
 end
 
-function Learn(model, train, incols, outcols)
+function Learn(train, model, (incols, outcols)::Pair)
   if !Tables.istable(train)
     throw(ArgumentError("training data must be a table"))
   end
