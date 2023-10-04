@@ -17,7 +17,11 @@ include("interface.jl")
 include("models/decisiontree.jl")
 include("learn.jl")
 
-export Learn,
+export
+  # transform
+  Learn,
+  
+  # models
   AdaBoostStumpClassifier,
   DecisionTreeClassifier,
   RandomForestClassifier,
