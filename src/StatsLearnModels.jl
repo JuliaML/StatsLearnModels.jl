@@ -18,14 +18,14 @@ include("models/decisiontree.jl")
 include("learn.jl")
 
 export
-  # transform
-  Learn,
-  
   # models
   AdaBoostStumpClassifier,
   DecisionTreeClassifier,
   RandomForestClassifier,
   DecisionTreeRegressor,
-  RandomForestRegressor
+  RandomForestRegressor,
+
+  # transform
+  Learn
 
 end
