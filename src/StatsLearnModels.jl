@@ -21,14 +21,14 @@ include("models/glm.jl")
 include("learn.jl")
 
 export
-  # models
-  # DecisionTree
+  # DecisionTree.jl
   AdaBoostStumpClassifier,
   DecisionTreeClassifier,
   RandomForestClassifier,
   DecisionTreeRegressor,
   RandomForestRegressor,
-  # GLM
+  
+  # GLM.jl
   LinearRegressor,
   GeneralizedLinearRegressor,
 
