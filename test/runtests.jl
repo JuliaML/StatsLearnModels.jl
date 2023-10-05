@@ -4,6 +4,9 @@ using DataFrames
 using Random
 using Test
 
+using GLM: ProbitLink
+using Distributions: Binomial
+
 import MLJ, MLJDecisionTreeInterface
 
 const SLM = StatsLearnModels
@@ -17,7 +20,7 @@ const SLM = StatsLearnModels
   @testset "interface" begin
     @testset "MLJ" begin
       Random.seed!(123)
-      Tree = MLJ.@load(DecisionTreeClassifier, pkg=DecisionTree, verbosity=0)
+      Tree = MLJ.@load(DecisionTreeClassifier, pkg = DecisionTree, verbosity = 0)
       fmodel = SLM.fit(Tree(), input[train, :], output[train, :])
       pred = SLM.predict(fmodel, input[test, :])
       accuracy = count(pred.target .== output.target[test]) / length(test)
@@ -31,6 +34,25 @@ const SLM = StatsLearnModels
       pred = SLM.predict(fmodel, input[test, :])
       accuracy = count(pred.target .== output.target[test]) / length(test)
       @test accuracy > 0.9
+    end
+
+    @testset "GLM" begin
+      x = [1, 2, 3]
+      y = [2, 4, 7]
+      input = DataFrame(; ones=ones(length(x)), x)
+      output = DataFrame(; y)
+      model = LinearRegressor()
+      fmodel = SLM.fit(model, input, output)
+      pred = SLM.predict(fmodel, input)
+      @test all(isapprox.(pred.y, output.y, atol=0.5))
+      x = [1, 2, 2]
+      y = [1, 0, 1]
+      input = DataFrame(; ones=ones(length(x)), x)
+      output = DataFrame(; y)
+      model = GeneralizedLinearRegressor(Binomial(), ProbitLink())
+      fmodel = SLM.fit(model, input, output)
+      pred = SLM.predict(fmodel, input)
+      @test all(isapprox.(pred.y, output.y, atol=0.5))
     end
   end
 
