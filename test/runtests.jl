@@ -36,6 +36,29 @@ const SLM = StatsLearnModels
       @test accuracy > 0.9
     end
 
+    @testset "NearestNeighbors" begin
+      Random.seed!(123)
+      model = KNNClassifier(5)
+      fmodel = SLM.fit(model, input[train, :], output[train, :])
+      pred = SLM.predict(fmodel, input[test, :])
+      accuracy = count(pred.target .== output.target[test]) / length(test)
+      @test accuracy > 0.9
+
+      Random.seed!(123)
+      a = rand(1:0.1:10, 100)
+      b = rand(1:0.1:10, 100)
+      y = 2a + b
+      input = DataFrame(; a, b)
+      output = DataFrame(; y)
+      model = KNNRegressor(5)
+      fmodel = SLM.fit(model, input, output)
+      pred = SLM.predict(fmodel, input)
+      @test count(isapprox.(pred.y, y, atol=0.8)) > 80
+
+      @test_throws ArgumentError SLM.fit(KNNClassifier(5), input, output)
+      @test_throws ArgumentError SLM.fit(KNNRegressor(5), input, rand('a':'z', 100))
+    end
+
     @testset "GLM" begin
       x = [1, 2, 3]
       y = [2, 4, 7]

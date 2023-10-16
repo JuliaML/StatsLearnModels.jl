@@ -1,3 +1,7 @@
+# ------------------------------------------------------------------
+# Licensed under the MIT License. See LICENSE in the project root.
+# ------------------------------------------------------------------
+
 abstract type GLMModel end
 
 struct LinearRegressor{K} <: GLMModel
@@ -18,18 +22,18 @@ GeneralizedLinearRegressor(dist::UnivariateDistribution, link=nothing; kwargs...
 function fit(model::GLMModel, input, output)
   cols = Tables.columns(output)
   names = Tables.columnnames(cols)
-  outcol = first(names)
+  outnm = first(names)
   X = Tables.matrix(input)
-  y = Tables.getcolumn(cols, outcol)
+  y = Tables.getcolumn(cols, outnm)
   fitted = _fit(model, X, y)
-  FittedModel(model, (fitted, outcol))
+  FittedModel(model, (fitted, outnm))
 end
 
 function predict(fmodel::FittedModel{<:GLMModel}, table)
-  model, outcol = fmodel.cache
+  model, outnm = fmodel.cache
   X = Tables.matrix(table)
   ŷ = GLM.predict(model, X)
-  (; outcol => ŷ) |> Tables.materializer(table)
+  (; outnm => ŷ) |> Tables.materializer(table)
 end
 
 _fit(model::LinearRegressor, X, y) = GLM.lm(X, y; model.kwargs...)

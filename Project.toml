@@ -5,9 +5,13 @@ version = "0.2.1"
 
 [deps]
 ColumnSelectors = "9cc86067-7e36-4c61-b350-1ac9833d277f"
+DataScienceTraits = "6cb2f572-2d2b-4ba6-bdb3-e710fa044d6c"
 DecisionTree = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb"
+Distances = "b4f34e82-e78d-54a5-968a-f98e89d6e8f7"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 GLM = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
+NearestNeighbors = "b8a86587-4115-5ab1-83bc-aa920d37bbce"
+StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 TableTransforms = "0d432bfd-3ee1-4ac1-886a-39f05cc69a3e"
 Tables = "bd369af6-aec1-5ad0-b16a-f7cc5008161c"
 
@@ -19,10 +23,14 @@ StatsLearnModelsMLJModelInterfaceExt = "MLJModelInterface"
 
 [compat]
 ColumnSelectors = "0.1"
+DataScienceTraits = "0.1"
 DecisionTree = "0.12"
+Distances = "0.10"
 Distributions = "0.25"
 GLM = "1.9"
 MLJModelInterface = "1.9"
+NearestNeighbors = "0.4"
+StatsBase = "0.34"
 TableTransforms = "1.15"
 Tables = "1.11"
 julia = "1.9"
