@@ -5,19 +5,28 @@
 module StatsLearnModels
 
 using Tables
+using Distances
+using DataScienceTraits
+using StatsBase: mode, mean
 using ColumnSelectors: selector
 using TableTransforms: StatelessFeatureTransform
+
+import DataScienceTraits as DST
 import TableTransforms: applyfeat, isrevertible
 
-import GLM
-import DecisionTree as DT
 using DecisionTree: AdaBoostStumpClassifier, DecisionTreeClassifier, RandomForestClassifier
 using DecisionTree: DecisionTreeRegressor, RandomForestRegressor
 using Distributions: UnivariateDistribution
+using NearestNeighbors: MinkowskiMetric
+
+import GLM
+import DecisionTree as DT
+import NearestNeighbors as NN
 
 include("interface.jl")
-include("models/decisiontree.jl")
 include("models/glm.jl")
+include("models/decisiontree.jl")
+include("models/nearestneighbors.jl")
 include("learn.jl")
 
 export
@@ -31,6 +40,10 @@ export
   # GLM.jl
   LinearRegressor,
   GeneralizedLinearRegressor,
+
+  # NearestNeighbors.jl
+  KNNClassifier,
+  KNNRegressor,
 
   # transform
   Learn
