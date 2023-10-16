@@ -55,8 +55,8 @@ const SLM = StatsLearnModels
       pred = SLM.predict(fmodel, input)
       @test count(isapprox.(pred.y, y, atol=0.8)) > 80
 
-      @test_throws SLM.fit(KNNClassifier(5), input, output)
-      @test_throws SLM.fit(KNNRegressor(5), input, rand('a':'z', 100))
+      @test_throws ArgumentError SLM.fit(KNNClassifier(5), input, output)
+      @test_throws ArgumentError SLM.fit(KNNRegressor(5), input, rand('a':'z', 100))
     end
 
     @testset "GLM" begin
