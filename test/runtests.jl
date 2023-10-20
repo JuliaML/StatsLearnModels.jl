@@ -17,7 +17,13 @@ const SLM = StatsLearnModels
   output = iris[:, [:target]]
   train, test = MLJ.partition(1:nrow(input), 0.7, rng=123)
 
-  @testset "interface" begin
+  @testset "show" begin
+    model = DecisionTreeClassifier()
+    fmodel = SLM.fit(model, input[train, :], output[train, :])
+    @test sprint(show, fmodel) == "FittedModel{DecisionTreeClassifier}"
+  end
+
+  @testset "models" begin
     @testset "MLJ" begin
       Random.seed!(123)
       Tree = MLJ.@load(DecisionTreeClassifier, pkg = DecisionTree, verbosity = 0)

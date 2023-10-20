@@ -29,3 +29,5 @@ struct FittedModel{M,C}
   model::M
   cache::C
 end
+
+Base.show(io::IO, ::FittedModel{M}) where {M} = print(io, "FittedModel{$(nameof(M))}")
