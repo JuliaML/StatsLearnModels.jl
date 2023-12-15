@@ -8,7 +8,7 @@ using Tables
 using Distances
 using DataScienceTraits
 using StatsBase: mode, mean
-using ColumnSelectors: selector
+using ColumnSelectors: ColumnSelector, selector
 using TableTransforms: StatelessFeatureTransform
 
 import DataScienceTraits as DST

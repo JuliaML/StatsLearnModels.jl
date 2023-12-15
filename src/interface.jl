@@ -31,3 +31,22 @@ struct FittedModel{M,C}
 end
 
 Base.show(io::IO, ::FittedModel{M}) where {M} = print(io, "FittedModel{$(nameof(M))}")
+
+"""
+    StatsLearnModels.StatsLearnModel(model, incols, outcols)
+
+Wrapper type for learning models used for dispatch purposes.
+"""
+struct StatsLearnModel{M,I<:ColumnSelector,O<:ColumnSelector}
+  model::M
+  input::I
+  output::O
+end
+
+StatsLearnModel(model, incols, outcols) = StatsLearnModel(model, selector(incols), selector(outcols))
+
+function Base.show(io::IO, model::StatsLearnModel{M}) where {M}
+  println(io, "StatsLearnModel{$(nameof(M))}")
+  println(io, "├─ input: $(model.input)")
+  print(io, "└─ output: $(model.output)")
+end
