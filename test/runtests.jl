@@ -23,6 +23,14 @@ const SLM = StatsLearnModels
     @test sprint(show, fmodel) == "FittedModel{DecisionTreeClassifier}"
   end
 
+  @testset "StatsLearnModel" begin
+    model = SLM.StatsLearnModel(DecisionTreeClassifier(), [:a, :b], :c)
+    @test sprint(show, model) == """
+    StatsLearnModel{DecisionTreeClassifier}
+    ├─ input: [:a, :b]
+    └─ output: :c"""
+  end
+
   @testset "models" begin
     @testset "MLJ" begin
       Random.seed!(123)
