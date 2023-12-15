@@ -6,6 +6,7 @@ using Test
 
 using GLM: ProbitLink
 using Distributions: Binomial
+using ColumnSelectors: selector
 
 import MLJ, MLJDecisionTreeInterface
 
@@ -24,8 +25,17 @@ const SLM = StatsLearnModels
   end
 
   @testset "StatsLearnModel" begin
-    model = SLM.StatsLearnModel(DecisionTreeClassifier(), [:a, :b], :c)
-    @test sprint(show, model) == """
+    # accessor functions
+    model = DecisionTreeClassifier()
+    incols = selector([:a, :b])
+    outcols = selector(:c)
+    lmodel = SLM.StatsLearnModel(model, incols, outcols)
+    @test SLM.model(lmodel) === model
+    @test SLM.input(lmodel) === incols
+    @test SLM.output(lmodel) === outcols
+    # show
+    lmodel = SLM.StatsLearnModel(DecisionTreeClassifier(), [:a, :b], :c)
+    @test sprint(show, lmodel) == """
     StatsLearnModel{DecisionTreeClassifier}
     ├─ input: [:a, :b]
     └─ output: :c"""

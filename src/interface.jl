@@ -50,3 +50,24 @@ function Base.show(io::IO, model::StatsLearnModel{M}) where {M}
   println(io, "├─ input: $(model.input)")
   print(io, "└─ output: $(model.output)")
 end
+
+"""
+    StatsLearnModels.model(lmodel::StatsLearnModel)
+  
+Returns the model of the `lmodel`.
+"""
+model(lmodel::StatsLearnModel) = lmodel.model
+
+"""
+    StatsLearnModels.input(lmodel::StatsLearnModel)
+  
+Returns the input column selection of the `lmodel`.
+"""
+input(lmodel::StatsLearnModel) = lmodel.input
+
+"""
+    StatsLearnModels.output(lmodel::StatsLearnModel)
+  
+Returns the output column selection of the `lmodel`.
+"""
+output(lmodel::StatsLearnModel) = lmodel.output
