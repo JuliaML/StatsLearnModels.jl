@@ -26,20 +26,22 @@ struct Learn{M<:FittedModel} <: StatelessFeatureTransform
   input::Vector{Symbol}
 end
 
-function Learn(train, model, (incols, outcols)::Pair)
+Learn(train, model, (incols, outcols)::Pair) = Learn(train, StatsLearnModel(model, incols, outcols))
+
+function Learn(train, lmodel::StatsLearnModel)
   if !Tables.istable(train)
     throw(ArgumentError("training data must be a table"))
   end
 
   cols = Tables.columns(train)
   names = Tables.columnnames(cols)
-  innms = selector(incols)(names)
-  outnms = selector(outcols)(names)
+  innms = lmodel.input(names)
+  outnms = lmodel.output(names)
 
   input = (; (nm => Tables.getcolumn(cols, nm) for nm in innms)...)
   output = (; (nm => Tables.getcolumn(cols, nm) for nm in outnms)...)
 
-  fmodel = fit(model, input, output)
+  fmodel = fit(lmodel.model, input, output)
   Learn(fmodel, innms)
 end
 
