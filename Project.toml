@@ -1,7 +1,7 @@
 name = "StatsLearnModels"
 uuid = "c146b59d-1589-421c-8e09-a22e554fd05c"
 authors = ["Elias Carvalho <eliascarvdev@gmail.com> and contributors"]
-version = "0.3.0"
+version = "0.3.1"
 
 [deps]
 ColumnSelectors = "9cc86067-7e36-4c61-b350-1ac9833d277f"
@@ -23,7 +23,7 @@ StatsLearnModelsMLJModelInterfaceExt = "MLJModelInterface"
 
 [compat]
 ColumnSelectors = "0.1"
-DataScienceTraits = "0.2"
+DataScienceTraits = "0.3"
 DecisionTree = "0.12"
 Distances = "0.10"
 Distributions = "0.25"
