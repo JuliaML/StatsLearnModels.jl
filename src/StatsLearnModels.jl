@@ -11,7 +11,6 @@ using StatsBase: mode, mean
 using ColumnSelectors: ColumnSelector, selector
 using TableTransforms: StatelessFeatureTransform
 
-import DataScienceTraits as DST
 import TableTransforms: applyfeat, isrevertible
 
 using DecisionTree: AdaBoostStumpClassifier, DecisionTreeClassifier, RandomForestClassifier

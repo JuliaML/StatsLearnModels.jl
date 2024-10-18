@@ -48,13 +48,13 @@ function predict(fmodel::FittedModel{<:NearestNeighborsModel}, table)
 end
 
 function _checkoutput(::KNNClassifier, x)
-  if !(elscitype(x) <: DST.Categorical)
+  if !(elscitype(x) <: Categorical)
     throw(ArgumentError("output column must be categorical"))
   end
 end
 
 function _checkoutput(::KNNRegressor, x)
-  if !(elscitype(x) <: DST.Continuous)
+  if !(elscitype(x) <: Continuous)
     throw(ArgumentError("output column must be continuous"))
   end
 end
