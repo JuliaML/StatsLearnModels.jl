@@ -48,7 +48,7 @@ in the ecosystem. It is also possible to use models from the
 The combination of TableTransforms.jl with StatsLearnModels.jl
 can be thought of as a powerful alternative to MLJ.jl.
 
-[build-img]: https://img.shields.io/github/actions/workflow/status/JuliaML/StatsLearnModels.jl/CI.yml?branch=master&style=flat-square
+[build-img]: https://img.shields.io/github/actions/workflow/status/JuliaML/StatsLearnModels.jl/CI.yml?branch=main&style=flat-square
 [build-url]: https://github.com/JuliaML/StatsLearnModels.jl/actions
 
 [codecov-img]: https://img.shields.io/codecov/c/github/JuliaML/StatsLearnModels.jl?style=flat-square
