@@ -1,7 +1,7 @@
 name = "StatsLearnModels"
 uuid = "c146b59d-1589-421c-8e09-a22e554fd05c"
 authors = ["Elias Carvalho <eliascarvdev@gmail.com> and contributors"]
-version = "1.0.0"
+version = "1.0.1"
 
 [deps]
 ColumnSelectors = "9cc86067-7e36-4c61-b350-1ac9833d277f"
@@ -30,7 +30,7 @@ Distributions = "0.25"
 GLM = "1.9"
 MLJModelInterface = "1.9"
 NearestNeighbors = "0.4"
-StatsBase = "0.34"
+StatsBase = "0.33, 0.34"
 TableTransforms = "1.15"
 Tables = "1.11"
 julia = "1.9"
