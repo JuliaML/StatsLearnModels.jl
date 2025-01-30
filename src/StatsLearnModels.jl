@@ -23,12 +23,20 @@ import DecisionTree as DT
 import NearestNeighbors as NN
 
 include("interface.jl")
+include("models/nn.jl")
 include("models/glm.jl")
-include("models/decisiontree.jl")
-include("models/nearestneighbors.jl")
+include("models/tree.jl")
 include("learn.jl")
 
 export
+  # NearestNeighbors.jl
+  KNNClassifier,
+  KNNRegressor,
+
+  # GLM.jl
+  LinearRegressor,
+  GeneralizedLinearRegressor,
+
   # DecisionTree.jl
   AdaBoostStumpClassifier,
   DecisionTreeClassifier,
@@ -36,14 +44,6 @@ export
   DecisionTreeRegressor,
   RandomForestRegressor,
   
-  # GLM.jl
-  LinearRegressor,
-  GeneralizedLinearRegressor,
-
-  # NearestNeighbors.jl
-  KNNClassifier,
-  KNNRegressor,
-
   # transform
   Learn
 
