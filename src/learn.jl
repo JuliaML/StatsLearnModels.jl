@@ -3,13 +3,11 @@
 # ------------------------------------------------------------------
 
 """
-    Learn(train, model, incols => outcols)
+    Learn(train, model, invars => outvars)
 
-Fits the statistical learning `model` using the input columns, selected by `incols`,
-and the output columns, selected by `outcols`, from the `train` table.
-
-The column selection can be a single column identifier (index or name),
-a collection of identifiers or a regular expression (regex).
+Fits the statistical learning `model` to `train` table,
+using the selectors of input variables `invars` and
+output variables `outvars`.
 
 # Examples
 
@@ -21,12 +19,12 @@ Learn(train, model, [1, 2, 3] => [:d, :e])
 Learn(train, model, r"[abc]" => ["d", "e"])
 ```
 """
-struct Learn{M<:FittedModel} <: StatelessFeatureTransform
+struct Learn{M<:FittedStatsLearnModel} <: StatelessFeatureTransform
   model::M
-  input::Vector{Symbol}
+  invars::Vector{Symbol}
 end
 
-Learn(train, model, (incols, outcols)::Pair) = Learn(train, StatsLearnModel(model, incols, outcols))
+Learn(train, model, (invars, outvars)::Pair) = Learn(train, StatsLearnModel(model, invars, outvars))
 
 function Learn(train, lmodel::StatsLearnModel)
   if !Tables.istable(train)
@@ -35,21 +33,26 @@ function Learn(train, lmodel::StatsLearnModel)
 
   cols = Tables.columns(train)
   names = Tables.columnnames(cols)
-  innms = lmodel.input(names)
-  outnms = lmodel.output(names)
+  invars = lmodel.invars(names)
+  outvars = lmodel.outvars(names)
 
-  input = (; (nm => Tables.getcolumn(cols, nm) for nm in innms)...)
-  output = (; (nm => Tables.getcolumn(cols, nm) for nm in outnms)...)
+  input = (; (var => Tables.getcolumn(cols, var) for var in invars)...)
+  output = (; (var => Tables.getcolumn(cols, var) for var in outvars)...)
 
   fmodel = fit(lmodel.model, input, output)
-  Learn(fmodel, innms)
+
+  Learn(fmodel, invars)
 end
 
 isrevertible(::Type{<:Learn}) = false
 
 function applyfeat(transform::Learn, feat, prep)
+  model = transform.model
+  vars = transform.invars
+
   cols = Tables.columns(feat)
-  pairs = (nm => Tables.getcolumn(cols, nm) for nm in transform.input)
+  pairs = (var => Tables.getcolumn(cols, var) for var in vars)
   test = (; pairs...) |> Tables.materializer(feat)
-  predict(transform.model, test), nothing
+
+  predict(model, test), nothing
 end

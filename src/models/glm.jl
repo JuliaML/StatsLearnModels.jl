@@ -26,10 +26,10 @@ function fit(model::GLMModel, input, output)
   X = Tables.matrix(input)
   y = Tables.getcolumn(cols, outnm)
   fitted = _fit(model, X, y)
-  FittedModel(model, (fitted, outnm))
+  FittedStatsLearnModel(model, (fitted, outnm))
 end
 
-function predict(fmodel::FittedModel{<:GLMModel}, table)
+function predict(fmodel::FittedStatsLearnModel{<:GLMModel}, table)
   model, outnm = fmodel.cache
   X = Tables.matrix(table)
   ŷ = GLM.predict(model, X)

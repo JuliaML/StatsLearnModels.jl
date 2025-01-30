@@ -21,24 +21,24 @@ const SLM = StatsLearnModels
   @testset "show" begin
     model = DecisionTreeClassifier()
     fmodel = SLM.fit(model, input[train, :], output[train, :])
-    @test sprint(show, fmodel) == "FittedModel{DecisionTreeClassifier}"
+    @test sprint(show, fmodel) == "FittedStatsLearnModel{DecisionTreeClassifier}"
   end
 
   @testset "StatsLearnModel" begin
     # accessor functions
     model = DecisionTreeClassifier()
-    incols = selector([:a, :b])
-    outcols = selector(:c)
-    lmodel = SLM.StatsLearnModel(model, incols, outcols)
-    @test SLM.model(lmodel) === model
-    @test SLM.input(lmodel) === incols
-    @test SLM.output(lmodel) === outcols
+    invars = selector([:a, :b])
+    outvars = selector(:c)
+    lmodel = SLM.StatsLearnModel(model, invars, outvars)
+    @test lmodel.model === model
+    @test lmodel.invars === invars
+    @test lmodel.outvars === outvars
     # show
     lmodel = SLM.StatsLearnModel(DecisionTreeClassifier(), [:a, :b], :c)
     @test sprint(show, lmodel) == """
     StatsLearnModel{DecisionTreeClassifier}
-    ├─ input: [:a, :b]
-    └─ output: :c"""
+    ├─ features: [:a, :b]
+    └─ targets: :c"""
   end
 
   @testset "models" begin
@@ -105,10 +105,11 @@ const SLM = StatsLearnModels
 
   @testset "Learn" begin
     Random.seed!(123)
-    outcol = :target
-    incols = setdiff(propertynames(iris), [outcol])
+    outvar = :target
+    invars = setdiff(propertynames(iris), [outvar])
+    outvars = outvar
     model = DecisionTreeClassifier()
-    transform = Learn(iris[train, :], model, incols => outcol)
+    transform = Learn(iris[train, :], model, invars => outvars)
     @test !isrevertible(transform)
     pred = transform(iris[test, :])
     accuracy = count(pred.target .== iris.target[test]) / length(test)
@@ -116,6 +117,6 @@ const SLM = StatsLearnModels
 
     # throws
     # training data is not a table
-    @test_throws ArgumentError Learn(nothing, model, incols => outcol)
+    @test_throws ArgumentError Learn(nothing, model, invars => outvars)
   end
 end

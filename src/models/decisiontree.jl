@@ -17,10 +17,10 @@ function fit(model::DecisionTreeModel, input, output)
   y = Tables.getcolumn(cols, outnm)
   X = Tables.matrix(input)
   DT.fit!(model, X, y)
-  FittedModel(model, outnm)
+  FittedStatsLearnModel(model, outnm)
 end
 
-function predict(fmodel::FittedModel{<:DecisionTreeModel}, table)
+function predict(fmodel::FittedStatsLearnModel{<:DecisionTreeModel}, table)
   outnm = fmodel.cache
   X = Tables.matrix(table)
   ŷ = DT.predict(fmodel.model, X)

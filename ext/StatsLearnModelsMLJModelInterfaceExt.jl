@@ -18,10 +18,10 @@ function SLM.fit(model::MI.Model, input, output)
   y = Tables.getcolumn(cols, target)
   data = MI.reformat(model, input, y)
   fitresult, _... = MI.fit(model, 0, data...)
-  SLM.FittedModel(model, (fitresult, target))
+  SLM.FittedStatsLearnModel(model, (fitresult, target))
 end
 
-function SLM.predict(fmodel::SLM.FittedModel{<:MI.Model}, table)
+function SLM.predict(fmodel::SLM.FittedStatsLearnModel{<:MI.Model}, table)
   (; model, cache) = fmodel
   fitresult, target = cache
   data = MI.reformat(model, table)

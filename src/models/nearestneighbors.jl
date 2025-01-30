@@ -34,10 +34,10 @@ function fit(model::NearestNeighborsModel, input, output)
   else
     NN.BallTree(data, metric; leafsize, reorder)
   end
-  FittedModel(model, (tree, outnm, outcol))
+  FittedStatsLearnModel(model, (tree, outnm, outcol))
 end
 
-function predict(fmodel::FittedModel{<:NearestNeighborsModel}, table)
+function predict(fmodel::FittedStatsLearnModel{<:NearestNeighborsModel}, table)
   (; model, cache) = fmodel
   tree, outnm, outcol = cache
   data = Tables.matrix(table, transpose=true)
