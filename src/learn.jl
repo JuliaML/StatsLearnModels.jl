@@ -3,11 +3,10 @@
 # ------------------------------------------------------------------
 
 """
-    Learn(train, model, invars => outvars)
+    Learn(train, model, features => targets)
 
 Fits the statistical learning `model` to `train` table,
-using the selectors of input variables `invars` and
-output variables `outvars`.
+using the selectors of `features` and `targets`.
 
 # Examples
 
@@ -21,10 +20,10 @@ Learn(train, model, r"[abc]" => ["d", "e"])
 """
 struct Learn{M<:FittedStatsLearnModel} <: StatelessFeatureTransform
   model::M
-  invars::Vector{Symbol}
+  feats::Vector{Symbol}
 end
 
-Learn(train, model, (invars, outvars)::Pair) = Learn(train, StatsLearnModel(model, invars, outvars))
+Learn(train, model, (feats, targs)::Pair) = Learn(train, StatsLearnModel(model, feats, targs))
 
 function Learn(train, lmodel::StatsLearnModel)
   if !Tables.istable(train)
@@ -33,22 +32,22 @@ function Learn(train, lmodel::StatsLearnModel)
 
   cols = Tables.columns(train)
   names = Tables.columnnames(cols)
-  invars = lmodel.invars(names)
-  outvars = lmodel.outvars(names)
+  feats = lmodel.feats(names)
+  targs = lmodel.targs(names)
 
-  input = (; (var => Tables.getcolumn(cols, var) for var in invars)...)
-  output = (; (var => Tables.getcolumn(cols, var) for var in outvars)...)
+  input = (; (var => Tables.getcolumn(cols, var) for var in feats)...)
+  output = (; (var => Tables.getcolumn(cols, var) for var in targs)...)
 
   fmodel = fit(lmodel.model, input, output)
 
-  Learn(fmodel, invars)
+  Learn(fmodel, feats)
 end
 
 isrevertible(::Type{<:Learn}) = false
 
 function applyfeat(transform::Learn, feat, prep)
   model = transform.model
-  vars = transform.invars
+  vars = transform.feats
 
   cols = Tables.columns(feat)
   pairs = (var => Tables.getcolumn(cols, var) for var in vars)

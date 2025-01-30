@@ -3,10 +3,10 @@
 # ------------------------------------------------------------------
 
 """
-    StatsLearnModel(model, invars, outvars)
+    StatsLearnModel(model, features, targets)
 
-Wrap a (possibly external) `model` with selectors of
-input variables `invars` and output variables `outvars`.
+Wrap a (possibly external) `model` with selectors
+of `features` and `targets`.
 
 ## Examples
 
@@ -17,11 +17,11 @@ StatsLearnModel(DecisionTreeClassifier(), 1:3, "target")
 """
 struct StatsLearnModel{M,I<:ColumnSelector,O<:ColumnSelector}
   model::M
-  invars::I
-  outvars::O
+  feats::I
+  targs::O
 end
 
-StatsLearnModel(model, invars, outvars) = StatsLearnModel(model, selector(invars), selector(outvars))
+StatsLearnModel(model, feats, targs) = StatsLearnModel(model, selector(feats), selector(targs))
 
 """
     fit(model, input, output)
@@ -34,8 +34,8 @@ function fit end
 
 function Base.show(io::IO, model::StatsLearnModel{M}) where {M}
   println(io, "StatsLearnModel{$(nameof(M))}")
-  println(io, "├─ features: $(model.invars)")
-  print(io, "└─ targets: $(model.outvars)")
+  println(io, "├─ features: $(model.feats)")
+  print(io, "└─ targets: $(model.targs)")
 end
 
 """

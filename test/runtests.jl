@@ -27,12 +27,12 @@ const SLM = StatsLearnModels
   @testset "StatsLearnModel" begin
     # accessor functions
     model = DecisionTreeClassifier()
-    invars = selector([:a, :b])
-    outvars = selector(:c)
-    lmodel = SLM.StatsLearnModel(model, invars, outvars)
+    feats = selector([:a, :b])
+    targs = selector(:c)
+    lmodel = SLM.StatsLearnModel(model, feats, targs)
     @test lmodel.model === model
-    @test lmodel.invars === invars
-    @test lmodel.outvars === outvars
+    @test lmodel.feats === feats
+    @test lmodel.targs === targs
     # show
     lmodel = SLM.StatsLearnModel(DecisionTreeClassifier(), [:a, :b], :c)
     @test sprint(show, lmodel) == """
@@ -106,10 +106,10 @@ const SLM = StatsLearnModels
   @testset "Learn" begin
     Random.seed!(123)
     outvar = :target
-    invars = setdiff(propertynames(iris), [outvar])
-    outvars = outvar
+    feats = setdiff(propertynames(iris), [outvar])
+    targs = outvar
     model = DecisionTreeClassifier()
-    transform = Learn(iris[train, :], model, invars => outvars)
+    transform = Learn(iris[train, :], model, feats => targs)
     @test !isrevertible(transform)
     pred = transform(iris[test, :])
     accuracy = count(pred.target .== iris.target[test]) / length(test)
@@ -117,6 +117,6 @@ const SLM = StatsLearnModels
 
     # throws
     # training data is not a table
-    @test_throws ArgumentError Learn(nothing, model, invars => outvars)
+    @test_throws ArgumentError Learn(nothing, model, feats => targs)
   end
 end
