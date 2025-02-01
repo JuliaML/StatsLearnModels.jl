@@ -5,7 +5,7 @@
 """
     StatsLearnModel(model, features, targets)
 
-Wrap a (possibly external) `model` with selectors
+Wrap a statistical learning `model` with selectors
 of `features` and `targets`.
 
 ## Examples
