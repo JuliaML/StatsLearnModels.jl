@@ -15,10 +15,10 @@ StatsLearnModel(DecisionTreeClassifier(), ["x1","x2"], "y")
 StatsLearnModel(DecisionTreeClassifier(), 1:3, "target")
 ```
 """
-struct StatsLearnModel{M,I<:ColumnSelector,O<:ColumnSelector}
+struct StatsLearnModel{M,F<:ColumnSelector,T<:ColumnSelector}
   model::M
-  feats::I
-  targs::O
+  feats::F
+  targs::T
 end
 
 StatsLearnModel(model, feats, targs) = StatsLearnModel(model, selector(feats), selector(targs))
