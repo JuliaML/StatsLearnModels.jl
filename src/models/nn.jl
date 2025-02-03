@@ -4,6 +4,16 @@
 
 abstract type NearestNeighborsModel end
 
+"""
+    KNNClassifier(k, metric=Euclidean(); leafsize=10, reorder=true)
+
+K-nearest neighbor classification model with `k` neighbors
+and `metric` from Distances.jl. Optionally, specify the
+`leafsize` and `reorder` options for the underlying trees in
+[NearestNeighbors.jl](https://github.com/KristofferC/NearestNeighbors.jl).
+
+See also [`KNNRegressor`](@ref).
+"""
 struct KNNClassifier{M<:Metric} <: NearestNeighborsModel
   k::Int
   metric::M
@@ -13,6 +23,16 @@ end
 
 KNNClassifier(k, metric=Euclidean(); leafsize=10, reorder=true) = KNNClassifier(k, metric, leafsize, reorder)
 
+"""
+    KNNRegressor(k, metric=Euclidean(); leafsize=10, reorder=true)
+
+K-nearest neighbor regression model with `k` neighbors
+and `metric` from Distances.jl. Optionally, specify the
+`leafsize` and `reorder` options for the underlying trees in
+[NearestNeighbors.jl](https://github.com/KristofferC/NearestNeighbors.jl).
+
+See also [`KNNClassifier`](@ref).
+"""
 struct KNNRegressor{M<:Metric} <: NearestNeighborsModel
   k::Int
   metric::M

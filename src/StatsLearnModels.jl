@@ -38,11 +38,11 @@ export
   GeneralizedLinearRegressor,
 
   # DecisionTree.jl
-  AdaBoostStumpClassifier,
   DecisionTreeClassifier,
-  RandomForestClassifier,
   DecisionTreeRegressor,
+  RandomForestClassifier,
   RandomForestRegressor,
+  AdaBoostStumpClassifier,
   
   # transform
   Learn

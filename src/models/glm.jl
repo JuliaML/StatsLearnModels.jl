@@ -4,12 +4,33 @@
 
 abstract type GLMModel end
 
+"""
+    LinearRegressor(; kwargs...)
+
+Linear regression model.
+
+The `kwargs` are forwarded to the `GLM.lm` function
+from [GLM.jl](https://github.com/JuliaStats/GLM.jl).
+
+See also [`GeneralizedLinearRegressor`](@ref).
+"""
 struct LinearRegressor{K} <: GLMModel
   kwargs::K
 end
 
 LinearRegressor(; kwargs...) = LinearRegressor(values(kwargs))
 
+"""
+    GeneralizedLinearRegressor(dist, link; kwargs...)
+
+Generalized linear regression model with distribution `dist`
+from Distributions.jl and `link` function.
+
+The `kwargs` are forwarded to the `GLM.glm` function
+from [GLM.jl](https://github.com/JuliaStats/GLM.jl).
+
+See also [`LinearRegressor`](@ref).
+"""
 struct GeneralizedLinearRegressor{D<:UnivariateDistribution,L<:Union{GLM.Link,Nothing},K} <: GLMModel
   dist::D
   link::L
