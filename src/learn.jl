@@ -8,7 +8,7 @@
 Fits the statistical learning `model` to `train` table,
 using the selectors of `features` and `targets`.
 
-# Examples
+## Examples
 
 ```julia
 Learn(train, model, [1, 2, 3] => "d")
