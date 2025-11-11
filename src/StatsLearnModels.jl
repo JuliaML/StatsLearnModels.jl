@@ -22,6 +22,7 @@ import GLM
 import DecisionTree as DT
 import NearestNeighbors as NN
 
+include("labeledtable.jl")
 include("interface.jl")
 include("models/nn.jl")
 include("models/glm.jl")
@@ -29,6 +30,10 @@ include("models/tree.jl")
 include("learn.jl")
 
 export
+  # labeled table
+  LabeledTable,
+  label,
+
   # NearestNeighbors.jl
   KNNClassifier,
   KNNRegressor,
