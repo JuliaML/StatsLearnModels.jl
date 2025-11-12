@@ -7,8 +7,6 @@ using Test
 using GLM: ProbitLink
 using Distributions: Binomial
 
-import MLJ, MLJDecisionTreeInterface
-
 const SLM = StatsLearnModels
 
 @testset "StatsLearnModels.jl" begin
@@ -97,19 +95,6 @@ const SLM = StatsLearnModels
     @test !isrevertible(transform)
     pred = transform(iris[test, :])
     accuracy = count(pred.target .== iris.target[test]) / length(test)
-    @test accuracy > 0.9
-  end
-
-  @testset "MLJ" begin
-    Random.seed!(123)
-    iris = DataFrame(MLJ.load_iris())
-    input = iris[:, Not(:target)]
-    output = iris[:, [:target]]
-    train, test = MLJ.partition(1:nrow(input), 0.7, rng=123)
-    Tree = MLJ.@load(DecisionTreeClassifier, pkg = DecisionTree, verbosity = 0)
-    fmodel = SLM.fit(Tree(), input[train, :], output[train, :])
-    pred = SLM.predict(fmodel, input[test, :])
-    accuracy = count(pred.target .== output.target[test]) / length(test)
     @test accuracy > 0.9
   end
 end

@@ -37,12 +37,11 @@ preds = learn(test)
 ```
 
 The function `label` is used to tag columns of the table with target labels,
-which can be categorical or continuous. All remaining columns are assumed to
-be predictors.
+which can be categorical or continuous. Remaining columns are assumed to be
+predictors.
 
-The package exports native Julia models from various packages
-in the ecosystem. It is also possible to use models from the
-[MLJ.jl](https://github.com/JuliaAI/MLJ.jl) stack.
+Please check the [models](https://github.com/JuliaML/StatsLearnModels.jl/tree/main/src/models)
+directory for documentation on available models and their parameters.
 
 [build-img]: https://img.shields.io/github/actions/workflow/status/JuliaML/StatsLearnModels.jl/CI.yml?branch=main&style=flat-square
 [build-url]: https://github.com/JuliaML/StatsLearnModels.jl/actions
