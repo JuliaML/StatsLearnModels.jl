@@ -4,13 +4,13 @@
 
 module StatsLearnModels
 
-using Tables
 using Distances
 using DataScienceTraits
 using StatsBase: mode, mean
 using ColumnSelectors: ColumnSelector, selector
 using TableTransforms: StatelessFeatureTransform
 
+import Tables
 import TableTransforms: applyfeat, isrevertible
 
 using DecisionTree: AdaBoostStumpClassifier, DecisionTreeClassifier, RandomForestClassifier

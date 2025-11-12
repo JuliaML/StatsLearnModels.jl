@@ -23,6 +23,18 @@ function LabeledTable(table, names)
   LabeledTable{typeof(table)}(table, labs)
 end
 
+Tables.istable(::Type{<:LabeledTable}) = true
+
+Tables.rowaccess(::Type{<:LabeledTable{T}}) where {T} = Tables.rowaccess(T)
+
+Tables.columnaccess(::Type{<:LabeledTable{T}}) where {T} = Tables.columnaccess(T)
+
+Tables.rows(t::LabeledTable) = Tables.rows(t.table)
+
+Tables.columns(t::LabeledTable) = Tables.columns(t.table)
+
+Tables.columnnames(t::LabeledTable) = Tables.columnnames(t.table)
+
 """
     label(table, names)
 
