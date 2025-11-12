@@ -34,6 +34,8 @@ include("learn.jl")
 export
   # labeled table
   LabeledTable,
+  predictors,
+  targets,
   label,
 
   # NearestNeighbors.jl

@@ -23,6 +23,10 @@ function LabeledTable(table, names)
   LabeledTable{typeof(table)}(table, labs)
 end
 
+# -----------------
+# TABLES INTERFACE
+# -----------------
+
 Tables.istable(::Type{<:LabeledTable}) = true
 
 Tables.rowaccess(::Type{<:LabeledTable{T}}) where {T} = Tables.rowaccess(T)
@@ -34,6 +38,20 @@ Tables.rows(t::LabeledTable) = Tables.rows(t.table)
 Tables.columns(t::LabeledTable) = Tables.columns(t.table)
 
 Tables.columnnames(t::LabeledTable) = Tables.columnnames(t.table)
+
+# -----------------
+# ACCESSOR METHODS
+# -----------------
+
+Base.parent(t::LabeledTable) = t.table
+
+function predictors(t::LabeledTable)
+  cols = Tables.columns(t.table)
+  vars = Tables.columnnames(cols)
+  setdiff(vars, t.labels)
+end
+
+targets(t::LabeledTable) = t.labels
 
 # -----------
 # IO METHODS
