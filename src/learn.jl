@@ -34,15 +34,12 @@ function applyfeat(transform::Learn, feat, prep)
   table = transform.table
   model = transform.model
 
-  # variables in labeled table
-  cols = Tables.columns(table)
-  vars = Tables.columnnames(cols)
-
-  # split targets and predictors
-  targs = table.labels
-  preds = setdiff(vars, targs)
+  # predictors and targets
+  preds = predictors(table)
+  targs = targets(table)
 
   # learn function with statistical model
+  cols = Tables.columns(parent(table))
   input = (; (pred => Tables.getcolumn(cols, pred) for pred in preds)...)
   output = (; (targ => Tables.getcolumn(cols, targ) for targ in targs)...)
   fmodel = fit(model, input, output)
@@ -58,8 +55,8 @@ function applyfeat(transform::Learn, feat, prep)
 end
 
 function _defaultmodel(table::LabeledTable)
-  cols = Tables.columns(table)
-  vals = Tables.getcolumn(cols, only(table.labels))
+  cols = Tables.columns(parent(table))
+  vals = Tables.getcolumn(cols, only(targets(table)))
   type = elscitype(vals)
   if type <: Categorical
     KNNClassifier(1)

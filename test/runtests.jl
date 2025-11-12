@@ -115,6 +115,24 @@ const SLM = StatsLearnModels
     @test !isrevertible(learn)
     preds = learn(train)
     accuracy = count(preds.y .== train.y) / length(train.y)
-    @test accuracy > 0
+    @test accuracy ≈ 1
+
+    # default classification model
+    Random.seed!(123)
+    train = (x1=rand(100), x2=rand(100), y=rand(1:3, 100))
+    learn = Learn(label(train, :y))
+    @test !isrevertible(learn)
+    preds = learn(train)
+    accuracy = count(preds.y .== train.y) / length(train.y)
+    @test accuracy ≈ 1
+
+    # default regression model
+    Random.seed!(123)
+    train = (x1=rand(100), x2=rand(100), y=rand(100))
+    learn = Learn(label(train, :y))
+    @test !isrevertible(learn)
+    preds = learn(train)
+    error = sum(abs2, preds.y .- train.y) / length(train.y)
+    @test error ≈ 0
   end
 end
