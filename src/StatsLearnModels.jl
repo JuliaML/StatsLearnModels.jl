@@ -4,13 +4,15 @@
 
 module StatsLearnModels
 
-using Tables
 using Distances
+using PrettyTables
+using StyledStrings
 using DataScienceTraits
 using StatsBase: mode, mean
 using ColumnSelectors: ColumnSelector, selector
 using TableTransforms: StatelessFeatureTransform
 
+import Tables
 import TableTransforms: applyfeat, isrevertible
 
 using DecisionTree: AdaBoostStumpClassifier, DecisionTreeClassifier, RandomForestClassifier
@@ -22,6 +24,7 @@ import GLM
 import DecisionTree as DT
 import NearestNeighbors as NN
 
+include("labeledtable.jl")
 include("interface.jl")
 include("models/nn.jl")
 include("models/glm.jl")
@@ -29,6 +32,12 @@ include("models/tree.jl")
 include("learn.jl")
 
 export
+  # labeled table
+  LabeledTable,
+  predictors,
+  targets,
+  label,
+
   # NearestNeighbors.jl
   KNNClassifier,
   KNNRegressor,

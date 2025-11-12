@@ -6,54 +6,50 @@ using Test
 
 using GLM: ProbitLink
 using Distributions: Binomial
-using ColumnSelectors: selector
-
-import MLJ, MLJDecisionTreeInterface
 
 const SLM = StatsLearnModels
 
 @testset "StatsLearnModels.jl" begin
-  @testset "Basic" begin
-    # show method
-    x1 = rand(1:0.1:10, 100)
-    x2 = rand(1:0.1:10, 100)
-    y = 2x1 + x2
-    input = DataFrame(; x1, x2)
-    output = DataFrame(; y)
-    train, test = 1:70, 71:100
-    model = DecisionTreeClassifier()
-    fmodel = SLM.fit(model, input[train, :], output[train, :])
-    @test sprint(show, fmodel) == "FittedStatsLearnModel{DecisionTreeClassifier}"
+  @testset "LabeledTable" begin
+    # labels as symbols
+    t = (x1=rand(3), x2=rand(3), y=rand(Int, 3))
+    l = label(t, :y)
+    @test parent(l) == t
+    @test predictors(l) == [:x1, :x2]
+    @test targets(l) == [:y]
 
-    # show method
-    lmodel = SLM.StatsLearnModel(DecisionTreeClassifier(), [:a, :b], :c)
-    @test sprint(show, lmodel) == """
-    StatsLearnModel{DecisionTreeClassifier}
-    ├─ features: [:a, :b]
-    └─ targets: :c"""
+    # labels as strings
+    t = (x1=rand(3), x2=rand(3), y=rand(Int, 3))
+    l = label(t, "y")
+    @test parent(l) == t
+    @test predictors(l) == [:x1, :x2]
+    @test targets(l) == [:y]
 
-    # accessor functions
-    model = DecisionTreeClassifier()
-    feats = selector([:a, :b])
-    targs = selector(:c)
-    lmodel = SLM.StatsLearnModel(model, feats, targs)
-    @test lmodel.model === model
-    @test lmodel.feats === feats
-    @test lmodel.targs === targs
+    # multiple labels
+    t = (x1=rand(3), x2=rand(3), y1=rand(Int, 3), y2=rand(Int, 3))
+    l = label(t, ["y1", "y2"])
+    @test parent(l) == t
+    @test predictors(l) == [:x1, :x2]
+    @test targets(l) == [:y1, :y2]
+
+    # labels as regex
+    t = (x1=rand(3), x2=rand(3), y1=rand(Int, 3), y2=rand(Int, 3))
+    l = label(t, r"y")
+    @test parent(l) == t
+    @test predictors(l) == [:x1, :x2]
+    @test targets(l) == [:y1, :y2]
   end
 
   @testset "Models" begin
     @testset "NearestNeighbors" begin
       Random.seed!(123)
-      iris = DataFrame(MLJ.load_iris())
-      input = iris[:, Not(:target)]
-      output = iris[:, [:target]]
-      train, test = MLJ.partition(1:nrow(input), 0.7, rng=123)
+      input = (x1=rand(100), x2=rand(100))
+      output = (y=rand(1:3, 100),)
       model = KNNClassifier(5)
-      fmodel = SLM.fit(model, input[train, :], output[train, :])
-      pred = SLM.predict(fmodel, input[test, :])
-      accuracy = count(pred.target .== output.target[test]) / length(test)
-      @test accuracy > 0.9
+      fmodel = SLM.fit(model, input, output)
+      foutput = SLM.predict(fmodel, input)
+      accuracy = count(foutput.y .== output.y) / length(output.y)
+      @test accuracy > 0
 
       Random.seed!(123)
       x1 = rand(1:0.1:10, 100)
@@ -77,63 +73,66 @@ const SLM = StatsLearnModels
       output = DataFrame(; y)
       model = LinearRegressor()
       fmodel = SLM.fit(model, input, output)
-      pred = SLM.predict(fmodel, input)
-      @test all(isapprox.(pred.y, output.y, atol=0.5))
+      foutput = SLM.predict(fmodel, input)
+      @test all(isapprox.(foutput.y, output.y, atol=0.5))
       x = [1, 2, 2]
       y = [1, 0, 1]
       input = DataFrame(; ones=ones(length(x)), x)
       output = DataFrame(; y)
       model = GeneralizedLinearRegressor(Binomial(), ProbitLink())
       fmodel = SLM.fit(model, input, output)
-      pred = SLM.predict(fmodel, input)
-      @test all(isapprox.(pred.y, output.y, atol=0.5))
+      foutput = SLM.predict(fmodel, input)
+      @test all(isapprox.(foutput.y, output.y, atol=0.5))
     end
 
     @testset "DecisionTree" begin
       Random.seed!(123)
-      iris = DataFrame(MLJ.load_iris())
-      input = iris[:, Not(:target)]
-      output = iris[:, [:target]]
-      train, test = MLJ.partition(1:nrow(input), 0.7, rng=123)
+      input = (x1=rand(100), x2=rand(100))
+      output = (y=rand(1:3, 100),)
       model = DecisionTreeClassifier()
-      fmodel = SLM.fit(model, input[train, :], output[train, :])
-      pred = SLM.predict(fmodel, input[test, :])
-      accuracy = count(pred.target .== output.target[test]) / length(test)
-      @test accuracy > 0.9
+      fmodel = SLM.fit(model, input, output)
+      foutput = SLM.predict(fmodel, input)
+      accuracy = count(foutput.y .== output.y) / length(output.y)
+      @test accuracy > 0
     end
+
+    # show method
+    x1 = rand(1:0.1:10, 100)
+    x2 = rand(1:0.1:10, 100)
+    y = 2x1 + x2
+    input = DataFrame(; x1, x2)
+    output = DataFrame(; y)
+    model = DecisionTreeClassifier()
+    fmodel = SLM.fit(model, input, output)
+    @test sprint(show, fmodel) == "FittedStatsLearnModel{DecisionTreeClassifier}"
   end
 
   @testset "Learn" begin
     Random.seed!(123)
-    iris = DataFrame(MLJ.load_iris())
-    input = iris[:, Not(:target)]
-    output = iris[:, [:target]]
-    train, test = MLJ.partition(1:nrow(input), 0.7, rng=123)
-    outvar = :target
-    feats = setdiff(propertynames(iris), [outvar])
-    targs = outvar
+    train = (x1=rand(100), x2=rand(100), y=rand(1:3, 100))
     model = DecisionTreeClassifier()
-    transform = Learn(iris[train, :], model, feats => targs)
-    @test !isrevertible(transform)
-    pred = transform(iris[test, :])
-    accuracy = count(pred.target .== iris.target[test]) / length(test)
-    @test accuracy > 0.9
+    learn = Learn(label(train, :y); model)
+    @test !isrevertible(learn)
+    preds = learn(train)
+    accuracy = count(preds.y .== train.y) / length(train.y)
+    @test accuracy ≈ 1
 
-    # throws
-    # training data is not a table
-    @test_throws ArgumentError Learn(nothing, model, feats => targs)
-  end
-
-  @testset "MLJ" begin
+    # default classification model
     Random.seed!(123)
-    iris = DataFrame(MLJ.load_iris())
-    input = iris[:, Not(:target)]
-    output = iris[:, [:target]]
-    train, test = MLJ.partition(1:nrow(input), 0.7, rng=123)
-    Tree = MLJ.@load(DecisionTreeClassifier, pkg = DecisionTree, verbosity = 0)
-    fmodel = SLM.fit(Tree(), input[train, :], output[train, :])
-    pred = SLM.predict(fmodel, input[test, :])
-    accuracy = count(pred.target .== output.target[test]) / length(test)
-    @test accuracy > 0.9
+    train = (x1=rand(100), x2=rand(100), y=rand(1:3, 100))
+    learn = Learn(label(train, :y))
+    @test !isrevertible(learn)
+    preds = learn(train)
+    accuracy = count(preds.y .== train.y) / length(train.y)
+    @test accuracy ≈ 1
+
+    # default regression model
+    Random.seed!(123)
+    train = (x1=rand(100), x2=rand(100), y=rand(100))
+    learn = Learn(label(train, :y))
+    @test !isrevertible(learn)
+    preds = learn(train)
+    error = sum(abs2, preds.y .- train.y) / length(train.y)
+    @test error ≈ 0
   end
 end

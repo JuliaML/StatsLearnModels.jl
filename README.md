@@ -26,27 +26,22 @@ train = (feature1=rand(100), feature2=rand(100), target=rand(1:2, 100))
 test = (feature1=rand(20), feature2=rand(20))
 ```
 
-One can train a learning `model` (e.g. `RandomForestClassifier`) with
-the `train` table:
+It is possible train a learning `model` (e.g. `RandomForestClassifier`) with
+the `train` table to approximate a `:target` label and perform predictions
+with the `test` table:
 
 ```julia
 model = RandomForestClassifier()
-
-learn = Learn(train, model, ["feature1","feature2"] => "target")
+learn = Learn(label(train, :target); model)
+preds = learn(test)
 ```
 
-and apply the trained `model` to the `test` table:
+The function `label` is used to tag columns of the table with target labels,
+which can be categorical or continuous. Remaining columns are assumed to be
+predictors.
 
-```julia
-pred = learn(test)
-```
-
-The package exports native Julia models from various packages
-in the ecosystem. It is also possible to use models from the
-[MLJ.jl](https://github.com/JuliaAI/MLJ.jl) stack.
-
-The combination of TableTransforms.jl with StatsLearnModels.jl
-can be thought of as a powerful alternative to MLJ.jl.
+Please check the [models](https://github.com/JuliaML/StatsLearnModels.jl/tree/main/src/models)
+directory for documentation on available models and their parameters.
 
 [build-img]: https://img.shields.io/github/actions/workflow/status/JuliaML/StatsLearnModels.jl/CI.yml?branch=main&style=flat-square
 [build-url]: https://github.com/JuliaML/StatsLearnModels.jl/actions
