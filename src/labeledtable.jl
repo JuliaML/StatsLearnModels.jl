@@ -68,9 +68,9 @@ function _common_kwargs(t)
 
   labels = map(vars) do var
     if var ∈ t.labels
-      styled"{(weight=bold),magenta:$var}"
+      styled"{(weight=bold),yellow:$var}"
     else
-      styled"{(weight=bold):$var}"
+      styled"{(weight=bold),magenta:$var}"
     end
   end
 
