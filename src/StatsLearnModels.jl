@@ -5,6 +5,8 @@
 module StatsLearnModels
 
 using Distances
+using PrettyTables
+using StyledStrings
 using DataScienceTraits
 using StatsBase: mode, mean
 using ColumnSelectors: ColumnSelector, selector

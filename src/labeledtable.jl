@@ -35,6 +35,54 @@ Tables.columns(t::LabeledTable) = Tables.columns(t.table)
 
 Tables.columnnames(t::LabeledTable) = Tables.columnnames(t.table)
 
+# -----------
+# IO METHODS
+# -----------
+
+function Base.summary(io::IO, t::LabeledTable)
+  name = nameof(typeof(t))
+  nlab =  length(t.labels)
+  print(io, "$name with $nlab label(s)")
+end
+
+Base.show(io::IO, t::LabeledTable) = summary(io, t)
+
+function Base.show(io::IO, ::MIME"text/plain", t::LabeledTable)
+  pretty_table(io, t; backend=:text, _common_kwargs(t)...)
+end
+
+function Base.show(io::IO, ::MIME"text/html", t::LabeledTable)
+  pretty_table(
+    io,
+    t;
+    backend=:html,
+    _common_kwargs(t)...,
+    renderer=:show,
+    style=HtmlTableStyle(title=["font-size" => "14px"])
+  )
+end
+
+function _common_kwargs(t)
+  cols = Tables.columns(t)
+  vars = Tables.columnnames(cols)
+
+  labels = map(vars) do var
+    if var ∈ t.labels
+      styled"{(weight=bold),magenta:$var}"
+    else
+      styled"{(weight=bold):$var}"
+    end
+  end
+
+  (
+    title=summary(t),
+    column_labels=collect(labels),
+    maximum_number_of_rows=10,
+    new_line_at_end=false,
+    alignment=:c
+  )
+end
+
 """
     label(table, names)
 
