@@ -6,7 +6,6 @@ using Test
 
 using GLM: ProbitLink
 using Distributions: Binomial
-using ColumnSelectors: selector
 
 import MLJ, MLJDecisionTreeInterface
 
@@ -24,22 +23,6 @@ const SLM = StatsLearnModels
     model = DecisionTreeClassifier()
     fmodel = SLM.fit(model, input[train, :], output[train, :])
     @test sprint(show, fmodel) == "FittedStatsLearnModel{DecisionTreeClassifier}"
-
-    # show method
-    lmodel = SLM.StatsLearnModel(DecisionTreeClassifier(), [:a, :b], :c)
-    @test sprint(show, lmodel) == """
-    StatsLearnModel{DecisionTreeClassifier}
-    ├─ features: [:a, :b]
-    └─ targets: :c"""
-
-    # accessor functions
-    model = DecisionTreeClassifier()
-    feats = selector([:a, :b])
-    targs = selector(:c)
-    lmodel = SLM.StatsLearnModel(model, feats, targs)
-    @test lmodel.model === model
-    @test lmodel.feats === feats
-    @test lmodel.targs === targs
   end
 
   @testset "Models" begin
@@ -109,19 +92,12 @@ const SLM = StatsLearnModels
     input = iris[:, Not(:target)]
     output = iris[:, [:target]]
     train, test = MLJ.partition(1:nrow(input), 0.7, rng=123)
-    outvar = :target
-    feats = setdiff(propertynames(iris), [outvar])
-    targs = outvar
     model = DecisionTreeClassifier()
-    transform = Learn(iris[train, :], model, feats => targs)
+    transform = Learn(label(iris[train, :], :target); model)
     @test !isrevertible(transform)
     pred = transform(iris[test, :])
     accuracy = count(pred.target .== iris.target[test]) / length(test)
     @test accuracy > 0.9
-
-    # throws
-    # training data is not a table
-    @test_throws ArgumentError Learn(nothing, model, feats => targs)
   end
 
   @testset "MLJ" begin
