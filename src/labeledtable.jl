@@ -39,6 +39,8 @@ Tables.columns(t::LabeledTable) = Tables.columns(t.table)
 
 Tables.columnnames(t::LabeledTable) = Tables.columnnames(t.table)
 
+Tables.schema(t::LabeledTable) = Tables.schema(t.table)
+
 # -----------------
 # ACCESSOR METHODS
 # -----------------
